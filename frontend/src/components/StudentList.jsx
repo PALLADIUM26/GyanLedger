@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const API_URL = 'http://localhost:8000/api/students/'
+const STUDENTS_API = 'http://localhost:8000/api/students/'
 
-export default function StudentList() {
+export default function StudentList({ token }) {
   const [students, setStudents] = useState([])
   const [formData, setFormData] = useState({
     name: '',
@@ -14,12 +14,18 @@ export default function StudentList() {
     address: ''
   })
 
+  const config = {
+    headers: {
+      Authorization: `Token ${token}`
+    }
+  }
+
   useEffect(() => {
     fetchStudents()
   }, [])
 
   const fetchStudents = async () => {
-    const res = await axios.get(API_URL)
+    const res = await axios.get(STUDENTS_API, config)
     setStudents(res.data)
   }
 
@@ -29,13 +35,13 @@ export default function StudentList() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    await axios.post(API_URL, formData)
+    await axios.post(STUDENTS_API, formData, config)
     setFormData({ name: '', student_class: '', phone: '', email: '', address: '' })
     fetchStudents()
   }
 
   const handleDelete = async (id) => {
-    await axios.delete(`${API_URL}${id}/`)
+    await axios.delete(`${STUDENTS_API}${id}/`, config)
     fetchStudents()
   }
 

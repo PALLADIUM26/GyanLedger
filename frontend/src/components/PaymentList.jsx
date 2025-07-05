@@ -4,7 +4,7 @@ import axios from 'axios'
 const STUDENTS_API = 'http://localhost:8000/api/students/'
 const PAYMENTS_API = 'http://localhost:8000/api/payments/'
 
-export default function PaymentList() {
+export default function PaymentList({ token }) {
   const [students, setStudents] = useState([])
   const [payments, setPayments] = useState([])
   const [formData, setFormData] = useState({
@@ -14,18 +14,24 @@ export default function PaymentList() {
     remarks: ''
   })
 
+  const config = {
+    headers: {
+      Authorization: `Token ${token}`
+    }
+  }
+
   useEffect(() => {
     fetchStudents()
     fetchPayments()
   }, [])
 
   const fetchStudents = async () => {
-    const res = await axios.get(STUDENTS_API)
+    const res = await axios.get(STUDENTS_API, config)
     setStudents(res.data)
   }
 
   const fetchPayments = async () => {
-    const res = await axios.get(PAYMENTS_API)
+    const res = await axios.get(PAYMENTS_API, config)
     setPayments(res.data)
   }
 
@@ -35,13 +41,13 @@ export default function PaymentList() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    await axios.post(PAYMENTS_API, formData)
+    await axios.post(PAYMENTS_API, formData, config)
     setFormData({ student: '', amount: '', date: '', remarks: '' })
     fetchPayments()
   }
 
   const handleDelete = async (id) => {
-    await axios.delete(`${PAYMENTS_API}${id}/`)
+    await axios.delete(`${PAYMENTS_API}${id}/`, config)
     fetchPayments()
   }
 
