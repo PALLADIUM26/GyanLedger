@@ -10,14 +10,26 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 
 class StudentViewSet(viewsets.ModelViewSet):
-    queryset = Student.objects.all().order_by('id')
     serializer_class = StudentSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return Student.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
 class PaymentViewSet(viewsets.ModelViewSet):
-    queryset = Payment.objects.all().order_by('-date')
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Payment.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])

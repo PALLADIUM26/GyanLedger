@@ -33,11 +33,23 @@ export default function StudentList({ token }) {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  const validateEmail = (email) => {
+    return email === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    await axios.post(STUDENTS_API, formData, config)
-    setFormData({ name: '', student_class: '', phone: '', email: '', address: '' })
-    fetchStudents()
+    if (!validateEmail(formData.email)) {
+      alert('Please enter a valid email address.')
+      return
+    }
+    try{
+      await axios.post(STUDENTS_API, formData, config)
+      setFormData({ name: '', student_class: '', phone: '', email: '', address: '' })
+      fetchStudents()
+    } catch (err) {
+      alert('❌ Failed to add student: ' + JSON.stringify(err.response?.data || err.message))
+    }
   }
 
   const handleDelete = async (id) => {
@@ -53,7 +65,7 @@ export default function StudentList({ token }) {
         <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
         <input name="student_class" placeholder="Class" value={formData.student_class} onChange={handleChange} required />
         <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
-        <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+        <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} />
         <input name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
         <button type="submit">Add Student</button>
       </form>

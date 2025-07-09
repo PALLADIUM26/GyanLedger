@@ -4,8 +4,8 @@ from .views import StudentViewSet, PaymentViewSet, register_user
 
 
 router = DefaultRouter()
-router.register(r'students', StudentViewSet)
-router.register(r'payments', PaymentViewSet)
+router.register(r'students', StudentViewSet, basename='student')
+router.register(r'payments', PaymentViewSet, basename='payment')
 
 urlpatterns = [
     path('', include(router.urls)),

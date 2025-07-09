@@ -5,14 +5,16 @@ from django.contrib.auth.models import User
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = '__all__'  # Includes all model fields
+        fields = ['id', 'name', 'student_class', 'phone', 'email', 'address']
+        # fields = '__all__'  # Includes all model fields
 
 class PaymentSerializer(serializers.ModelSerializer):
     student_name = serializers.CharField(source='student.name', read_only=True)
 
     class Meta:
         model = Payment
-        fields = '__all__'
+        fields = ['id', 'student', 'student_name', 'amount', 'date', 'remarks']
+        # fields = '__all__'
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
