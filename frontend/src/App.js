@@ -5,6 +5,7 @@ import RegisterForm from './components/RegisterForm'
 import StudentList from './components/StudentList.jsx'
 import PaymentList from './components/PaymentList.jsx'
 import HomePage from './components/HomePage'
+import Dashboard from './components/Dashboard'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'))
@@ -54,7 +55,8 @@ function App() {
             </nav>
             <Routes>
               <Route path="/" element={<Navigate to="/home" />} />
-              <Route path="/home" element={<HomePage />} />
+              {/* <Route path="/home" element={<HomePage />} /> */}
+              <Route path="/home" element={<Dashboard token={token} />} />
               <Route path="/students" element={<StudentList token={token} />} />
               <Route path="/payments" element={<PaymentList token={token} />} />
             </Routes>
