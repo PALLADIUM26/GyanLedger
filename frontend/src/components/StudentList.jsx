@@ -1,4 +1,3 @@
-// src/components/StudentList.jsx
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
@@ -13,6 +12,7 @@ export default function StudentList({ token }) {
     email: '',
     address: ''
   })
+  const [editId, setEditId] = useState(null)
 
   const config = {
     headers: {
@@ -44,7 +44,12 @@ export default function StudentList({ token }) {
       return
     }
     try{
-      await axios.post(STUDENTS_API, formData, config)
+      if (editId) {
+        await axios.put(`${STUDENTS_API}${editId}/`, formData, config)
+        setEditId(null)
+      } else {
+        await axios.post(STUDENTS_API, formData, config)
+      }
       setFormData({ name: '', student_class: '', phone: '', email: '', address: '' })
       fetchStudents()
     } catch (err) {
@@ -52,7 +57,19 @@ export default function StudentList({ token }) {
     }
   }
 
+  const handleEdit = (student) => {
+    setEditId(student.id)
+    setFormData({
+      name: student.name,
+      student_class: student.student_class,
+      phone: student.phone,
+      email: student.email,
+      address: student.address,
+    })
+  }
+
   const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete?")) return;
     await axios.delete(`${STUDENTS_API}${id}/`, config)
     fetchStudents()
   }
@@ -67,13 +84,23 @@ export default function StudentList({ token }) {
         <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
         <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} />
         <input name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
-        <button type="submit">Add Student</button>
+        
+        {/* <button type="submit">Add Student</button> */}
+        <button type="submit">{editId ? 'Update' : 'Add Student'}</button>
+
+        {editId && (
+          <button type="button" onClick={() => {
+            setEditId(null)
+            setFormData({ name: '', student_class: '', phone: '', email: '', address: '' })
+          }}>Cancel Edit</button>
+        )}
       </form>
 
       <ul>
         {students.map((s) => (
           <li key={s.id}>
             {s.name} ({s.student_class}) — {s.phone}
+            <button onClick={() => handleEdit(s)}>✏️</button>
             <button onClick={() => handleDelete(s.id)}>❌</button>
           </li>
         ))}

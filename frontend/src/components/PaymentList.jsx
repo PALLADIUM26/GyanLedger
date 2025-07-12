@@ -7,6 +7,7 @@ const PAYMENTS_API = 'http://localhost:8000/api/payments/'
 export default function PaymentList({ token }) {
   const [students, setStudents] = useState([])
   const [payments, setPayments] = useState([])
+  const [editId, setEditId] = useState(null)
   const [formData, setFormData] = useState({
     student: '',
     amount: '',
@@ -41,14 +42,30 @@ export default function PaymentList({ token }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    await axios.post(PAYMENTS_API, formData, config)
+    if (editId) {
+      await axios.put(`${PAYMENTS_API}${editId}/`, formData, config)
+      setEditId(null)
+    } else {
+      await axios.post(PAYMENTS_API, formData, config)
+    }
     setFormData({ student: '', amount: '', date: '', remarks: '' })
     fetchPayments()
   }
 
   const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete?")) return;
     await axios.delete(`${PAYMENTS_API}${id}/`, config)
     fetchPayments()
+  }
+
+  const handleEdit = (payment) => {
+    setEditId(payment.id)
+    setFormData({
+      student: payment.student, // this should be the student id
+      amount: payment.amount,
+      date: payment.date,
+      remarks: payment.remarks
+    })
   }
 
   return (
@@ -67,13 +84,22 @@ export default function PaymentList({ token }) {
         <input name="amount" type="number" placeholder="Amount" value={formData.amount} onChange={handleChange} required />
         <input name="date" type="date" value={formData.date} onChange={handleChange} required />
         <input name="remarks" placeholder="Remarks" value={formData.remarks} onChange={handleChange} />
-        <button type="submit">Add Payment</button>
+        {/* <button type="submit">Add Payment</button> */}
+        <button type="submit">{editId ? 'Update Payment' : 'Add Payment'}</button>
+
+        {editId && (
+          <button type="button" onClick={() => {
+            setEditId(null)
+            setFormData({ student: '', amount: '', date: '', remarks: '' })
+          }}>Cancel Edit</button>
+        )}
       </form>
 
       <ul>
         {payments.map((p) => (
           <li key={p.id}>
             {p.student_name} paid ₹{p.amount} on {p.date} ({p.remarks})
+            <button onClick={() => handleEdit(p)}>✏️</button>
             <button onClick={() => handleDelete(p.id)}>❌</button>
           </li>
         ))}
