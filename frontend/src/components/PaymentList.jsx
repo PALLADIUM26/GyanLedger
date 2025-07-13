@@ -14,6 +14,7 @@ export default function PaymentList({ token }) {
     date: '',
     remarks: ''
   })
+  const [searchTerm, setSearchTerm] = useState('')
 
   const config = {
     headers: {
@@ -68,9 +69,21 @@ export default function PaymentList({ token }) {
     })
   }
 
+  const filteredPayments = payments.filter((p) =>
+    p.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.remarks.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   return (
     <div>
       <h2>💰 Payment Records</h2>
+
+      <input
+        type="text"
+        placeholder="Search by student or remarks"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
 
       <form onSubmit={handleSubmit}>
         <select name="student" value={formData.student} onChange={handleChange} required>
@@ -94,16 +107,20 @@ export default function PaymentList({ token }) {
           }}>Cancel Edit</button>
         )}
       </form>
-
-      <ul>
-        {payments.map((p) => (
-          <li key={p.id}>
-            {p.student_name} paid ₹{p.amount} on {p.date} ({p.remarks})
-            <button onClick={() => handleEdit(p)}>✏️</button>
-            <button onClick={() => handleDelete(p.id)}>❌</button>
-          </li>
-        ))}
-      </ul>
+      
+      {filteredPayments.length > 0 ? (
+        <ul>
+          {filteredPayments.map((p) => (
+            <li key={p.id}>
+              {p.student_name} paid ₹{p.amount} on {p.date} ({p.remarks})
+              <button onClick={() => handleEdit(p)}>✏️</button>
+              <button onClick={() => handleDelete(p.id)}>❌</button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p style={{ color: '#999', fontStyle: 'italic' }}>No payments found.</p>
+      )}
     </div>
   )
 }

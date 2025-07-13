@@ -77,6 +77,12 @@ export default function StudentList({ token }) {
     fetchStudents()
   }
 
+  const filteredStudents = students.filter((s) =>
+    s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.student_class.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  
+
   return (
     <div>
       <h2>📚 Student List</h2>
@@ -107,20 +113,20 @@ export default function StudentList({ token }) {
         )}
       </form>
 
-      <ul>
-        {students
-        .filter((s) =>
-          s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          s.student_class.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-        .map((s) => (
-          <li key={s.id}>
-            {s.name} ({s.student_class}) — {s.phone} - ₹{s.monthly_fee}
-            <button onClick={() => handleEdit(s)}>✏️</button>
-            <button onClick={() => handleDelete(s.id)}>❌</button>
-          </li>
-        ))}
-      </ul>
+      {filteredStudents.length > 0 ? (
+        <ul>
+          {filteredStudents.map((s) => (
+            <li key={s.id}>
+              {s.name} ({s.student_class}) — {s.phone} - ₹{s.monthly_fee}
+              <button onClick={() => handleEdit(s)}>✏️</button>
+              <button onClick={() => handleDelete(s.id)}>❌</button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p style={{ color: '#999', fontStyle: 'italic' }}>No students found.</p>
+      )}
+
     </div>
   )
 }
