@@ -10,9 +10,11 @@ export default function StudentList({ token }) {
     student_class: '',
     phone: '',
     email: '',
-    address: ''
+    address: '',
+    monthly_fee: ''
   })
   const [editId, setEditId] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const config = {
     headers: {
@@ -50,7 +52,7 @@ export default function StudentList({ token }) {
       } else {
         await axios.post(STUDENTS_API, formData, config)
       }
-      setFormData({ name: '', student_class: '', phone: '', email: '', address: '' })
+      setFormData({ name: '', student_class: '', phone: '', email: '', address: '', monthly_fee: '' })
       fetchStudents()
     } catch (err) {
       alert('❌ Failed to add student: ' + JSON.stringify(err.response?.data || err.message))
@@ -65,6 +67,7 @@ export default function StudentList({ token }) {
       phone: student.phone,
       email: student.email,
       address: student.address,
+      monthly_fee: student.monthly_fee,
     })
   }
 
@@ -78,28 +81,41 @@ export default function StudentList({ token }) {
     <div>
       <h2>📚 Student List</h2>
 
+      {/* 🔍 Search Input */}
+      <input
+        type="text"
+        placeholder="🔍 Search by name or class"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ marginBottom: '1rem', padding: '0.5rem' }}
+      />
+
       <form onSubmit={handleSubmit}>
         <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
         <input name="student_class" placeholder="Class" value={formData.student_class} onChange={handleChange} required />
         <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
         <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} />
         <input name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
-        
-        {/* <button type="submit">Add Student</button> */}
+        <input name="monthly_fee" placeholder="Monthly Fee" type="number" value={formData.monthly_fee} onChange={handleChange} required />
         <button type="submit">{editId ? 'Update' : 'Add Student'}</button>
 
         {editId && (
           <button type="button" onClick={() => {
             setEditId(null)
-            setFormData({ name: '', student_class: '', phone: '', email: '', address: '' })
+            setFormData({ name: '', student_class: '', phone: '', email: '', address: '', monthly_fee: '' })
           }}>Cancel Edit</button>
         )}
       </form>
 
       <ul>
-        {students.map((s) => (
+        {students
+        .filter((s) =>
+          s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          s.student_class.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .map((s) => (
           <li key={s.id}>
-            {s.name} ({s.student_class}) — {s.phone}
+            {s.name} ({s.student_class}) — {s.phone} - ₹{s.monthly_fee}
             <button onClick={() => handleEdit(s)}>✏️</button>
             <button onClick={() => handleDelete(s.id)}>❌</button>
           </li>
