@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ['id', 'name', 'student_class', 'phone', 'email', 'address']
+        fields = ['id', 'name', 'student_class', 'phone', 'email', 'address', 'monthly_fee']
         # fields = '__all__'  # Includes all model fields
 
 class PaymentSerializer(serializers.ModelSerializer):
