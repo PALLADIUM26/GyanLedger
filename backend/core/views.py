@@ -2,13 +2,13 @@ from rest_framework import viewsets
 from .models import Student, Payment
 from .serializers import StudentSerializer, PaymentSerializer
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import RegisterSerializer
 from rest_framework.permissions import AllowAny
-from rest_framework.decorators import permission_classes
 from datetime import date
+from django.utils.timezone import now
 
 class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
@@ -41,6 +41,7 @@ def register_user(request):
         return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def dashboard_summary(request):
@@ -69,3 +70,25 @@ def dashboard_summary(request):
         'total_amount': total_amount,
         'unpaid_students': unpaid_students
     })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def due_payments(request):
+    user = request.user
+    students = Student.objects.filter(user=user)
+    dues = []
+    today = now().date()
+
+    for student in students:
+        latest_payment = Payment.objects.filter(student=student).order_by('-date').first()
+        if not latest_payment or latest_payment.date.month != today.month or latest_payment.date.year != today.year:
+            dues.append({
+                'student_id': student.id,
+                'name': student.name,
+                'class': student.student_class,
+                'monthly_fee': student.monthly_fee,
+                'last_payment': latest_payment.date if latest_payment else None
+            })
+
+    return Response(dues)

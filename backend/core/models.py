@@ -8,6 +8,7 @@ class Student(models.Model):
     phone = models.CharField(max_length=15)
     email = models.EmailField(blank=True)
     address = models.TextField(blank=True)
+    monthly_fee = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return f"{self.name} ({self.student_class})"
