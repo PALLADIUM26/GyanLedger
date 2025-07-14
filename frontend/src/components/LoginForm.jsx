@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const LOGIN_API = 'http://localhost:8000/api-token-auth/'
 
@@ -11,13 +12,16 @@ export default function LoginForm({ onLogin }) {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  const navigate = useNavigate()
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       const response = await axios.post(LOGIN_API, formData)
       const token = response.data.token
-      localStorage.setItem('token', token)  // 🔐 Save token in localStorage
-      onLogin(token)  // 👈 Notify parent component
+      localStorage.setItem('token', token)
+      onLogin(token)
+      navigate('/home')
     } catch (err) {
       setError('Invalid credentials!')
     }
