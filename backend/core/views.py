@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import RegisterSerializer
 from rest_framework.permissions import AllowAny
-from datetime import date
+from datetime import date, datetime
 from django.utils.timezone import now
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -92,3 +92,31 @@ def due_payments(request):
             })
 
     return Response(dues)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def monthly_summary(request):
+    user = request.user
+    month = request.GET.get('month')
+    year = request.GET.get('year')
+
+    if not month or not year:
+        return Response({'error': 'Month and year are required'}, status=400)
+
+    month = int(month)
+    year = int(year)
+
+    students = Student.objects.filter(user=user)
+    payments = Payment.objects.filter(user=user, date__month=month, date__year=year)
+
+    expected = sum([s.monthly_fee for s in students])
+    collected = sum([p.amount for p in payments])
+    pending = expected - collected
+
+    return Response({
+        'month': f"{year}-{month:02d}",
+        'expected': expected,
+        'collected': collected,
+        'pending': pending
+    })
