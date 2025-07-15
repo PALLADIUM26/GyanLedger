@@ -1,8 +1,8 @@
 from rest_framework import viewsets
-from .models import Student, Payment
-from .serializers import StudentSerializer, PaymentSerializer
+from .models import Student, Payment, Profile
+from .serializers import StudentSerializer, PaymentSerializer#, ProfileSerializer
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import RegisterSerializer
@@ -10,6 +10,8 @@ from rest_framework.permissions import AllowAny
 from datetime import date, datetime
 from django.utils.timezone import now
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import check_password
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
@@ -128,12 +130,15 @@ def monthly_summary(request):
 def user_profile(request):
     user = request.user
 
+    # profile, created = Profile.objects.get_or_create(user=user)
+
     if request.method == 'GET':
         return Response({
             'username': user.username,
             'email': user.email,
             'first_name': user.first_name,
-            'last_name': user.last_name
+            'last_name': user.last_name,
+            # 'image': request.build_absolute_uri(user.profile.image.url)
         })
 
     elif request.method == 'PUT':
@@ -142,6 +147,35 @@ def user_profile(request):
         user.first_name = data.get('first_name', user.first_name)
         user.last_name = data.get('last_name', user.last_name)
         user.save()
+        # if 'image' in request.FILES:
+        #     profile.image = request.FILES['image']
+        #     profile.save()
+
         return Response({'message': 'Profile updated successfully!'})
     
-    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    user = request.user
+    old_password = request.data.get('old_password')
+    new_password = request.data.get('new_password')
+
+    if not user.check_password(old_password):
+        return Response({'error': '❌ Incorrect old password'}, status=400)
+
+    user.set_password(new_password)
+    user.save()
+    return Response({'message': '🔐 Password changed successfully'})
+
+
+# @api_view(['PUT'])
+# @parser_classes([MultiPartParser, FormParser])
+# @permission_classes([IsAuthenticated])
+# def update_profile_picture(request):
+#     profile = request.user.userprofile
+#     serializer = ProfileSerializer(profile, data=request.data, partial=True)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response({'message': '✅ Profile picture updated!'})
+#     return Response(serializer.errors, status=400)

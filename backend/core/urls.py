@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import StudentViewSet, PaymentViewSet, register_user
-from .views import dashboard_summary, due_payments, monthly_summary, user_profile
+from .views import dashboard_summary, due_payments, monthly_summary, user_profile, change_password
 
 router = DefaultRouter()
 router.register(r'students', StudentViewSet, basename='student')
@@ -14,4 +14,5 @@ urlpatterns = [
     path('dues/', due_payments),
     path('monthly-summary/', monthly_summary),
     path('profile/', user_profile),
+    path('change-password/', change_password),
 ]
