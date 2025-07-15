@@ -13,8 +13,16 @@ export default function RegisterForm({ onLogin }) {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  const validateEmail = (email) => {
+    return email === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!validateEmail(formData.email)) {
+      alert('Please enter a valid email address.')
+      return
+    }
     try {
       await axios.post(REGISTER_API, formData)
       setSuccess(true)
@@ -29,7 +37,7 @@ export default function RegisterForm({ onLogin }) {
       localStorage.setItem('token', token)
       onLogin(token)
     } catch (err) {
-      setError('Registration failed. Try a different username.')
+      setError('Registration failed. Try a different username or valid email.')
     }
   }
 
