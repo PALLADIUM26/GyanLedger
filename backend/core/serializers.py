@@ -33,7 +33,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
     
 
-# class ProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Profile
-#         fields = ['id', 'profile_pic']
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['id', 'image']

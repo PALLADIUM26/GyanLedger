@@ -10,7 +10,8 @@ export default function ProfilePage({ token }) {
     username: '',
     email: '',
     first_name: '',
-    last_name: ''
+    last_name: '',
+    image: ''
   })
   const [message, setMessage] = useState('')
   const [passwordData, setPasswordData] = useState({ old_password: '', new_password: '' })
@@ -24,12 +25,12 @@ export default function ProfilePage({ token }) {
     }
   }
 
-//   const config = {
-//     headers: {
-//       Authorization: `Token ${token}`,
-//       'Content-Type': 'multipart/form-data'
-//     }
-//   };
+  const config2 = {
+    headers: {
+      Authorization: `Token ${token}`,
+      'Content-Type': 'multipart/form-data'
+    }
+  };
 
   useEffect(() => {
     fetchProfile()
@@ -40,35 +41,36 @@ export default function ProfilePage({ token }) {
         const res = await axios.get(PROFILE_API, config)
         setProfile(res.data)
         if (res.data.image) {
-        setImagePreview(`${IMAGE_BASE}${res.data.image}`);
-      }
+            // setImagePreview(`${IMAGE_BASE}${res.data.image}`);
+            setImagePreview(res.data.image);
+        }
     } catch (err) {
         console.error('Error fetching profile:', err);
     }
   }
 
-//   const handleImageChange = (e) => {
-//     const file = e.target.files[0];
-//     setSelectedImage(file);
-//     setImagePreview(URL.createObjectURL(file));
-//   };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedImage(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
 
-//   const handleUpload = async (e) => {
-//     e.preventDefault();
-//     if (!selectedImage) return;
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    if (!selectedImage) return;
 
-//     const formData = new FormData();
-//     formData.append('image', selectedImage);
+    const formData = new FormData();
+    formData.append('image', selectedImage);
 
-//     try {
-//       await axios.put(PROFILE_API, formData, config);
-//       alert('✅ Profile picture updated!');
-//       fetchProfile();
-//     } catch (err) {
-//       alert('❌ Upload failed');
-//       console.error(err);
-//     }
-//   };
+    try {
+      await axios.put(PROFILE_API, formData, config2);
+      alert('✅ Profile picture updated!');
+      fetchProfile();
+    } catch (err) {
+      alert('❌ Upload failed');
+      console.error(err);
+    }
+  };
 
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value })
@@ -104,14 +106,14 @@ export default function ProfilePage({ token }) {
         <input name="first_name" value={profile.first_name} onChange={handleChange} placeholder="First Name" />
         <input name="last_name" value={profile.last_name} onChange={handleChange} placeholder="Last Name" />
         <button type="submit">Update Profile</button>
-        {/* {imagePreview && <img src={imagePreview} alt="Profile" width={120} height={120} />} */}
+        {imagePreview && <img src={imagePreview} alt="Profile" width={120} height={120} />}
       </form>
       {message && <p>{message}</p>}
 
-      {/* <form onSubmit={handleUpload}>
+      <form onSubmit={handleUpload}>
         <input type="file" accept="image/*" onChange={handleImageChange} />
         <button type="submit">Upload New Picture</button>
-      </form> */}
+      </form>
 
       <hr />
 
