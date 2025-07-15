@@ -180,3 +180,11 @@ def update_profile_picture(request):
         serializer.save()
         return Response({'message': '✅ Profile picture updated!'})
     return Response(serializer.errors, status=400)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_account(request):
+    user = request.user
+    user.delete()
+    return Response({'message': '👋 Account deleted successfully!'}, status=200)

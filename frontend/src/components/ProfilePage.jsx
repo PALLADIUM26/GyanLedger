@@ -3,7 +3,8 @@ import axios from 'axios'
 
 const PROFILE_API = 'http://localhost:8000/api/profile/'
 const PASSWORD_API = 'http://localhost:8000/api/change-password/'
-const IMAGE_BASE = 'http://localhost:8000/media/';
+const IMAGE_BASE = 'http://localhost:8000/media/'
+const DELETE_API = 'http://localhost:8000/api/delete-account/'
 
 export default function ProfilePage({ token }) {
   const [profile, setProfile] = useState({
@@ -97,6 +98,21 @@ export default function ProfilePage({ token }) {
     }
   }
 
+  const handleDeleteAccount = async () => {
+    if (!window.confirm('⚠️ Are you sure you want to delete your account? This action is irreversible.')) return;
+  
+    try {
+      await axios.delete(DELETE_API, config);
+      alert('👋 Account deleted successfully!');
+      // Optionally clear token/localStorage and redirect to login
+      localStorage.removeItem('token');
+      window.location.href = '/login'; // Adjust route if needed
+    } catch (err) {
+      alert('❌ Failed to delete account.');
+      console.error(err);
+    }
+  }
+
   return (
     <div>
       <h2>👤 Your Profile</h2>
@@ -124,6 +140,11 @@ export default function ProfilePage({ token }) {
         <button type="submit">Change Password</button>
         {passMsg && <p>{passMsg}</p>}
       </form>
+
+      <hr />
+      <button onClick={handleDeleteAccount} style={{ color: 'red' }}>
+      🗑️ Delete My Account
+      </button>
     </div>
   )
 }
