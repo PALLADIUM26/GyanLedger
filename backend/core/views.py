@@ -9,6 +9,7 @@ from .serializers import RegisterSerializer
 from rest_framework.permissions import AllowAny
 from datetime import date, datetime
 from django.utils.timezone import now
+from django.contrib.auth.models import User
 
 class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
@@ -120,3 +121,27 @@ def monthly_summary(request):
         'collected': collected,
         'pending': pending
     })
+
+
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def user_profile(request):
+    user = request.user
+
+    if request.method == 'GET':
+        return Response({
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name
+        })
+
+    elif request.method == 'PUT':
+        data = request.data
+        user.email = data.get('email', user.email)
+        user.first_name = data.get('first_name', user.first_name)
+        user.last_name = data.get('last_name', user.last_name)
+        user.save()
+        return Response({'message': 'Profile updated successfully!'})
+    
+    

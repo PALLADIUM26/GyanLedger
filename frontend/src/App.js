@@ -8,6 +8,7 @@ import HomePage from './components/HomePage'
 import Dashboard from './components/Dashboard'
 import DueList from './components/DueList'
 import MonthlySummary from './components/MonthlySummary'
+import ProfilePage from './components/ProfilePage'
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'))
@@ -53,8 +54,9 @@ function App() {
               <Link to="/home">🏠 Home</Link> |{' '}
               <Link to="/students">👨‍🎓 Students</Link> |{' '}
               <Link to="/payments">💸 Payments</Link> |{' '}
-              <Link to="/dues">🕒 Due Payments</Link> |
-              <Link to="/summary">📊 Summary</Link> |
+              <Link to="/dues">🕒 Due Payments</Link> |{' '}
+              <Link to="/summary">📊 Summary</Link> |{' '}
+              <Link to="/profile">👤 Profile</Link> |{' '}
               <button onClick={handleLogout}>Logout</button>
             </nav>
             <Routes>
@@ -65,6 +67,7 @@ function App() {
               <Route path="/payments" element={<PaymentList token={token} />} />
               <Route path="/dues" element={<DueList token={token} />} />
               <Route path="/summary" element={<MonthlySummary token={token} />} />
+              <Route path="/profile" element={<ProfilePage token={token} />} />
             </Routes>
           </>
         )}
