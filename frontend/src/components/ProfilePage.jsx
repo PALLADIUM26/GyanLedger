@@ -35,6 +35,8 @@ export default function ProfilePage({ token }) {
 
   useEffect(() => {
     fetchProfile()
+    const savedTheme = localStorage.getItem('theme') || 'light'
+    document.body.classList.add(savedTheme)
   }, [])
 
   const fetchProfile = async () => {
@@ -113,6 +115,19 @@ export default function ProfilePage({ token }) {
     }
   }
 
+  const toggleTheme = () => {
+    const body = document.body
+    if (body.classList.contains('dark')) {
+      body.classList.remove('dark')
+      body.classList.add('light')
+      localStorage.setItem('theme', 'light')
+    } else {
+      body.classList.remove('light')
+      body.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    }
+  }
+
   return (
     <div>
       <h2>👤 Your Profile</h2>
@@ -140,6 +155,10 @@ export default function ProfilePage({ token }) {
         <button type="submit">Change Password</button>
         {passMsg && <p>{passMsg}</p>}
       </form>
+
+      <button onClick={() => toggleTheme()}>
+        🌓 Toggle Theme
+      </button>
 
       <hr />
       <button onClick={handleDeleteAccount} style={{ color: 'red' }}>

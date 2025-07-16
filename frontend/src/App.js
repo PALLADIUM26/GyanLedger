@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom'
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
@@ -22,6 +22,17 @@ function App() {
     localStorage.removeItem('token')
     setToken(null)
   }
+
+  // useEffect(() => {
+  //   const theme = localStorage.getItem('theme') || 'light';
+  //   document.body.className = theme;
+  // }, []);
+
+  // const toggleTheme = () => {
+  //   const current = document.body.className === 'dark' ? 'light' : 'dark';
+  //   document.body.className = current;
+  //   localStorage.setItem('theme', current);
+  // };
 
   return (
     <Router>

@@ -56,5 +56,7 @@ const cardStyle = {
   padding: '1rem',
   width: '200px',
   textAlign: 'center',
-  backgroundColor: '#f9f9f9',
+  // backgroundColor: '#f9f9f9',
+  backgroundColor: 'var(--card-bg)',
+  color: 'var(--text-color)',
 }
