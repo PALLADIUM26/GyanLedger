@@ -3,7 +3,8 @@ import axios from 'axios'
 
 const PROFILE_API = 'http://localhost:8000/api/profile/'
 const PASSWORD_API = 'http://localhost:8000/api/change-password/'
-const IMAGE_BASE = 'http://localhost:8000/media/'
+const IMAGE_API = 'http://localhost:8000/api/profile-image/'
+const IMAGE_UPLOAD_API = 'http://localhost:8000/api/profile-image/upload/'
 const DELETE_API = 'http://localhost:8000/api/delete-account/'
 
 export default function ProfilePage({ token }) {
@@ -35,6 +36,7 @@ export default function ProfilePage({ token }) {
 
   useEffect(() => {
     fetchProfile()
+    fetchProfileImage()
     const savedTheme = localStorage.getItem('theme') || 'light'
     document.body.classList.add(savedTheme)
   }, [])
@@ -43,12 +45,22 @@ export default function ProfilePage({ token }) {
     try {
         const res = await axios.get(PROFILE_API, config)
         setProfile(res.data)
-        if (res.data.image) {
-            // setImagePreview(`${IMAGE_BASE}${res.data.image}`);
-            setImagePreview(res.data.image);
-        }
     } catch (err) {
         console.error('Error fetching profile:', err);
+    }
+  }
+
+  const fetchProfileImage = async () => {
+    try {
+      const imageRes = await axios.get(IMAGE_API, {
+        headers: { Authorization: `Token ${token}` },
+        responseType: 'blob'
+      })
+      const imgUrl = URL.createObjectURL(imageRes.data)
+      setImagePreview(imgUrl)
+    } catch (err) {
+      console.error('❌ Error fetching image:', err.response?.status, err.response?.data)
+      setImagePreview(null)
     }
   }
 
@@ -66,7 +78,7 @@ export default function ProfilePage({ token }) {
     formData.append('image', selectedImage);
 
     try {
-      await axios.put(PROFILE_API, formData, config2);
+      await axios.put(IMAGE_UPLOAD_API, formData, config2);
       alert('✅ Profile picture updated!');
       fetchProfile();
     } catch (err) {

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Student, Payment
 from django.contrib.auth.models import User
-from .models import Profile
+# from .models import Profile
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,7 +33,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
     
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ['id', 'image']
+# class ProfileSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Profile
+#         fields = ['id', 'image']

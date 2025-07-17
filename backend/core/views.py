@@ -1,17 +1,21 @@
 from rest_framework import viewsets
-from .models import Student, Payment, Profile
-from .serializers import StudentSerializer, PaymentSerializer, ProfileSerializer
+from .models import Student, Payment#, Profile
+from .serializers import StudentSerializer, PaymentSerializer#, ProfileSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import RegisterSerializer
 from rest_framework.permissions import AllowAny
-from datetime import date, datetime
+from datetime import date#, datetime
 from django.utils.timezone import now
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import check_password
+# from django.contrib.auth.hashers import check_password
 from rest_framework.parsers import MultiPartParser, FormParser
+from .mongo_utils import save_image, get_image
+from django.http import JsonResponse, HttpResponse
+from mimetypes import guess_type
+
 
 class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = StudentSerializer
@@ -130,7 +134,7 @@ def monthly_summary(request):
 def user_profile(request):
     user = request.user
 
-    profile, created = Profile.objects.get_or_create(user=user)
+    # profile, created = Profile.objects.get_or_create(user=user)
 
     if request.method == 'GET':
         return Response({
@@ -138,7 +142,8 @@ def user_profile(request):
             'email': user.email,
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'image': request.build_absolute_uri(user.profile.image.url) if user.profile.image else None
+            'image': request.build_absolute_uri('/api/profile-image/')
+            # 'image': request.build_absolute_uri(user.profile.image.url) if user.profile.image else None
             # 'image': request.build_absolute_uri(user.profile.image.url)
         })
 
@@ -148,9 +153,11 @@ def user_profile(request):
         user.first_name = data.get('first_name', user.first_name)
         user.last_name = data.get('last_name', user.last_name)
         user.save()
-        if 'image' in request.FILES:
-            profile.image = request.FILES['image']
-            profile.save()
+
+        # if 'image' in request.FILES:
+        #     file = request.FILES['image']
+        #     image_id = save_image(file, user.username)
+        #     return Response({'message': 'Profile updated successfully!', 'image_id': image_id})
 
         return Response({'message': 'Profile updated successfully!'})
     
@@ -170,16 +177,44 @@ def change_password(request):
     return Response({'message': '🔐 Password changed successfully'})
 
 
+# @api_view(['PUT'])
+# @parser_classes([MultiPartParser, FormParser])
+# @permission_classes([IsAuthenticated])
+# def update_profile_picture(request):
+#     profile = request.user.userprofile
+#     serializer = ProfileSerializer(profile, data=request.data, partial=True)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response({'message': '✅ Profile picture updated!'})
+#     return Response(serializer.errors, status=400)
+
+
 @api_view(['PUT'])
 @parser_classes([MultiPartParser, FormParser])
 @permission_classes([IsAuthenticated])
 def update_profile_picture(request):
-    profile = request.user.userprofile
-    serializer = ProfileSerializer(profile, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({'message': '✅ Profile picture updated!'})
-    return Response(serializer.errors, status=400)
+    user = request.user
+    image_file = request.FILES.get('image')
+
+    if not image_file:
+        return JsonResponse({'error': 'No image provided'}, status=400)
+
+    filename = f"{user.username}"
+    save_image(image_file, filename)
+
+    return JsonResponse({'message': '✅ Profile picture uploaded to MongoDB!'})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_profile_image(request):
+    image_data = get_image(request.user.username)
+    if image_data:
+        mime_type, _ = guess_type(image_data.filename)
+        image_data = image_data.read()
+        return HttpResponse(image_data, content_type=mime_type or 'image/jpeg')
+        # return HttpResponse(image_data, content_type='image/jpeg')  # or 'image/png'
+    return Response({'error': 'No profile picture found'}, status=404)
 
 
 @api_view(['DELETE'])
