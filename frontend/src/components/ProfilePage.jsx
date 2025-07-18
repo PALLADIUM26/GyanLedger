@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 const PROFILE_API = 'http://localhost:8000/api/profile/'
 const PASSWORD_API = 'http://localhost:8000/api/change-password/'
@@ -7,7 +8,7 @@ const IMAGE_API = 'http://localhost:8000/api/profile-image/'
 const IMAGE_UPLOAD_API = 'http://localhost:8000/api/profile-image/upload/'
 const DELETE_API = 'http://localhost:8000/api/delete-account/'
 
-export default function ProfilePage({ token }) {
+export default function ProfilePage({ token, setToken  }) {
   const [profile, setProfile] = useState({
     username: '',
     email: '',
@@ -20,6 +21,8 @@ export default function ProfilePage({ token }) {
   const [passMsg, setPassMsg] = useState('')
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+
+  const navigate = useNavigate();
 
   const config = {
     headers: {
@@ -118,9 +121,9 @@ export default function ProfilePage({ token }) {
     try {
       await axios.delete(DELETE_API, config);
       alert('👋 Account deleted successfully!');
-      // Optionally clear token/localStorage and redirect to login
       localStorage.removeItem('token');
-      window.location.href = '/login'; // Adjust route if needed
+      setToken(null);
+      navigate('/');
     } catch (err) {
       alert('❌ Failed to delete account.');
       console.error(err);
