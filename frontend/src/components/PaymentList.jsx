@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 
 const STUDENTS_API = 'http://localhost:8000/api/students/'
 const PAYMENTS_API = 'http://localhost:8000/api/payments/'
@@ -38,9 +39,11 @@ export default function PaymentList({ token }) {
     try {
       const res = await axios.get(PAYMENTS_API, config)
       await new Promise(res => setTimeout(res, 1000));
+      toast("Payment records fetched")
       setPayments(res.data)
     } catch (err) {
-      alert('❌ Failed to fetch payments')
+      // alert('❌ Failed to fetch payments')
+      toast.error('❌ Failed to fetch payments')
     } finally {
       setLoading(false)
     }
@@ -52,19 +55,26 @@ export default function PaymentList({ token }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (editId) {
-      await axios.put(`${PAYMENTS_API}${editId}/`, formData, config)
-      setEditId(null)
-    } else {
-      await axios.post(PAYMENTS_API, formData, config)
+    try{
+      if (editId) {
+        await axios.put(`${PAYMENTS_API}${editId}/`, formData, config)
+        toast.info('Payment record modified')
+        setEditId(null)
+      } else {
+        await axios.post(PAYMENTS_API, formData, config)
+        toast.info('Payment record added')
+      }
+      setFormData({ student: '', amount: '', date: '', remarks: '' })
+      fetchPayments()
+    } catch {
+      toast.error('❌ Failed to add or modify payment')
     }
-    setFormData({ student: '', amount: '', date: '', remarks: '' })
-    fetchPayments()
   }
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete?")) return;
     await axios.delete(`${PAYMENTS_API}${id}/`, config)
+    toast.info('Selected payment record deleted')
     fetchPayments()
   }
 

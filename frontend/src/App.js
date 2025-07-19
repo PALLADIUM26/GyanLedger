@@ -10,6 +10,8 @@ import DueList from './components/DueList'
 import MonthlySummary from './components/MonthlySummary'
 import ProfilePage from './components/ProfilePage'
 import LandingPage from './components/LandingPage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css'
 
 
@@ -130,6 +132,8 @@ function App() {
             <button onClick={handleLogout}>Logout</button>
           </nav>
         )}
+
+        <ToastContainer position="top-right" autoClose={3000} />
 
         {/* 🌐 Routes */}
         <Routes>

@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
 
 const LOGIN_API = 'http://localhost:8000/api-token-auth/'
 
 export default function LoginForm({ onLogin }) {
   const [formData, setFormData] = useState({ username: '', password: '' })
-  const [error, setError] = useState('')
+  // const [error, setError] = useState('')
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -21,9 +22,11 @@ export default function LoginForm({ onLogin }) {
       const token = response.data.token
       localStorage.setItem('token', token)
       onLogin(token)
+      toast.success("Logged in successfully!");
       navigate('/home')
     } catch (err) {
-      setError('Invalid credentials!')
+      toast.error("Invalid credentials!");
+      // setError('Invalid credentials!')
     }
   }
 
@@ -48,7 +51,7 @@ export default function LoginForm({ onLogin }) {
         />
         <button type="submit">Login</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {/* {error && <p style={{ color: 'red' }}>{error}</p>} */}
     </div>
   )
 }

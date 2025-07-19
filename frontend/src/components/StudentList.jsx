@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 
 const STUDENTS_API = 'http://localhost:8000/api/students/'
 
@@ -32,9 +33,11 @@ export default function StudentList({ token }) {
     try {
       const res = await axios.get(STUDENTS_API, config)
       await new Promise(res => setTimeout(res, 1000));
+      toast("Student records fetched")
       setStudents(res.data)
     } catch (err) {
-      alert('❌ Failed to fetch students')
+      toast.error('❌ Failed to fetch students')
+      // alert('❌ Failed to fetch students')
     } finally {
       setLoading(false)
     }
@@ -51,20 +54,24 @@ export default function StudentList({ token }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!validateEmail(formData.email)) {
-      alert('Please enter a valid email address.')
+      toast.error('Please enter a valid email address.')
+      // alert('Please enter a valid email address.')
       return
     }
     try{
       if (editId) {
         await axios.put(`${STUDENTS_API}${editId}/`, formData, config)
+        toast.info('Student record modified')
         setEditId(null)
       } else {
         await axios.post(STUDENTS_API, formData, config)
+        toast.info('Student record added')
       }
       setFormData({ name: '', student_class: '', phone: '', email: '', address: '', monthly_fee: '' })
       fetchStudents()
     } catch (err) {
-      alert('❌ Failed to add student: ' + JSON.stringify(err.response?.data || err.message))
+      toast.error('❌ Failed to add or modify student')
+      // alert('❌ Failed to add student: ' + JSON.stringify(err.response?.data || err.message))
     }
   }
 
@@ -83,6 +90,7 @@ export default function StudentList({ token }) {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete?")) return;
     await axios.delete(`${STUDENTS_API}${id}/`, config)
+    toast.info('Selected student record deleted')
     fetchStudents()
   }
 

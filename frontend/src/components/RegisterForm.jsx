@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 
 const REGISTER_API = 'http://localhost:8000/api/register/'
 const LOGIN_API = 'http://localhost:8000/api-token-auth/'
 
 export default function RegisterForm({ onLogin }) {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' })
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
+  // const [error, setError] = useState('')
+  // const [success, setSuccess] = useState(false)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -20,12 +21,13 @@ export default function RegisterForm({ onLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!validateEmail(formData.email)) {
-      alert('Please enter a valid email address.')
+      toast.error("Please enter a valid email address.");
+      // alert('Please enter a valid email address.')
       return
     }
     try {
       await axios.post(REGISTER_API, formData)
-      setSuccess(true)
+      // setSuccess(true)
 
       const res = await axios.post(LOGIN_API, {
         username: formData.username,
@@ -35,8 +37,10 @@ export default function RegisterForm({ onLogin }) {
       const token = res.data.token
       localStorage.setItem('token', token)
       onLogin(token)
+      toast.success("Registered successfully!");
     } catch (err) {
-      setError('Registration failed. Try a different username or valid email.')
+      toast.error("Registration failed. Try a different username or valid email.");
+      // setError('Registration failed. Try a different username or valid email.')
     }
   }
 
@@ -49,8 +53,8 @@ export default function RegisterForm({ onLogin }) {
         <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
         <button type="submit">Sign Up</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>Registered successfully! Logging in...</p>}
+      {/* {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>Registered successfully! Logging in...</p>} */}
     </div>
   )
 }

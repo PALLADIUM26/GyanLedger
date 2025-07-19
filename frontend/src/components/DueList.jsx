@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 
 const DUES_API = 'http://localhost:8000/api/dues/'
 
@@ -18,9 +19,11 @@ export default function DueList({ token }) {
         headers: { Authorization: `Token ${token}` }
       })
       await new Promise(res => setTimeout(res, 1000));
+      toast("Due list ready");
       setDues(res.data)
     } catch (err) {
-      alert('❌ Failed to fetch due list')
+      // alert('❌ Failed to fetch due list')
+      toast.error("❌ Failed to fetch due list");
     } finally {
       setLoading(false)
     }
