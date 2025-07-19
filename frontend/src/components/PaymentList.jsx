@@ -15,6 +15,7 @@ export default function PaymentList({ token }) {
     remarks: ''
   })
   const [searchTerm, setSearchTerm] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const config = {
     headers: {
@@ -33,8 +34,16 @@ export default function PaymentList({ token }) {
   }
 
   const fetchPayments = async () => {
-    const res = await axios.get(PAYMENTS_API, config)
-    setPayments(res.data)
+    setLoading(true)
+    try {
+      const res = await axios.get(PAYMENTS_API, config)
+      await new Promise(res => setTimeout(res, 1000));
+      setPayments(res.data)
+    } catch (err) {
+      alert('❌ Failed to fetch payments')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleChange = (e) => {
@@ -108,18 +117,20 @@ export default function PaymentList({ token }) {
         )}
       </form>
       
-      {filteredPayments.length > 0 ? (
-        <ul>
-          {filteredPayments.map((p) => (
-            <li key={p.id}>
-              {p.student_name} paid ₹{p.amount} on {p.date} ({p.remarks})
-              <button onClick={() => handleEdit(p)}>✏️</button>
-              <button onClick={() => handleDelete(p.id)}>❌</button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p style={{ color: '#999', fontStyle: 'italic' }}>No payments found.</p>
+      {loading ? (
+        <div className="spinner"></div>
+        ) : filteredPayments.length > 0 ? (
+          <ul>
+            {filteredPayments.map((p) => (
+              <li key={p.id}>
+                {p.student_name} paid ₹{p.amount} on {p.date} ({p.remarks})
+                <button onClick={() => handleEdit(p)}>✏️</button>
+                <button onClick={() => handleDelete(p.id)}>❌</button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p style={{ color: '#999', fontStyle: 'italic' }}>No payments found.</p>
       )}
     </div>
   )

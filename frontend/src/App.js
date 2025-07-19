@@ -10,6 +10,8 @@ import DueList from './components/DueList'
 import MonthlySummary from './components/MonthlySummary'
 import ProfilePage from './components/ProfilePage'
 import LandingPage from './components/LandingPage';
+import './App.css'
+
 
 function AppWrapper(){
   return (

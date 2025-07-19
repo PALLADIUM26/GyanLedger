@@ -15,6 +15,7 @@ export default function StudentList({ token }) {
   })
   const [editId, setEditId] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const config = {
     headers: {
@@ -27,8 +28,16 @@ export default function StudentList({ token }) {
   }, [])
 
   const fetchStudents = async () => {
-    const res = await axios.get(STUDENTS_API, config)
-    setStudents(res.data)
+    setLoading(true)
+    try {
+      const res = await axios.get(STUDENTS_API, config)
+      await new Promise(res => setTimeout(res, 1000));
+      setStudents(res.data)
+    } catch (err) {
+      alert('❌ Failed to fetch students')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleChange = (e) => {
@@ -113,18 +122,20 @@ export default function StudentList({ token }) {
         )}
       </form>
 
-      {filteredStudents.length > 0 ? (
-        <ul>
-          {filteredStudents.map((s) => (
-            <li key={s.id}>
-              {s.name} ({s.student_class}) — {s.phone} - ₹{s.monthly_fee}
-              <button onClick={() => handleEdit(s)}>✏️</button>
-              <button onClick={() => handleDelete(s.id)}>❌</button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p style={{ color: '#999', fontStyle: 'italic' }}>No students found.</p>
+      {loading ? (
+        <div className="spinner"></div>
+        ) : filteredStudents.length > 0 ? (
+          <ul>
+            {filteredStudents.map((s) => (
+              <li key={s.id}>
+                {s.name} ({s.student_class}) — {s.phone} - ₹{s.monthly_fee}
+                <button onClick={() => handleEdit(s)}>✏️</button>
+                <button onClick={() => handleDelete(s.id)}>❌</button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p style={{ color: '#999', fontStyle: 'italic' }}>No students found.</p>
       )}
 
     </div>

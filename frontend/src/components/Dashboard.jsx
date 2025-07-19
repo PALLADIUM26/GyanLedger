@@ -5,8 +5,10 @@ const SUMMARY_API = 'http://localhost:8000/api/summary/'
 
 export default function Dashboard({ token }) {
   const [summary, setSummary] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    setLoading(true)
     const fetchSummary = async () => {
       try {
         const res = await axios.get(SUMMARY_API, {
@@ -14,16 +16,20 @@ export default function Dashboard({ token }) {
             Authorization: `Token ${token}`,
           },
         })
+        await new Promise(res => setTimeout(res, 1000));
         setSummary(res.data)
       } catch (err) {
-        console.error('Error fetching summary:', err)
+        alert('Error fetching summary:', err)
+      } finally {
+        setLoading(false)
       }
     }
 
     fetchSummary()
   }, [token])
 
-  if (!summary) return <p>Loading dashboard...</p>
+  if (!summary) return <div className="spinner"></div>
+  // <p>Loading dashboard...</p>
 
   return (
     <div>
