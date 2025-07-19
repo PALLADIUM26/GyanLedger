@@ -34,20 +34,20 @@ export default function Dashboard({ token }) {
   return (
     <div>
       <h2>📊 Dashboard Summary</h2>
-      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-        <div style={cardStyle}>
+      <div className="cards-container">
+        <div className="card">
           <h3>👨‍🎓 Total Students</h3>
           <p>{summary.total_students}</p>
         </div>
-        <div style={cardStyle}>
+        <div className="card">
           <h3>💰 Payments This Month</h3>
           <p>{summary.total_payments} transactions</p>
         </div>
-        <div style={cardStyle}>
+        <div className="card">
           <h3>🪙 Total Amount</h3>
           <p>₹{summary.total_amount}</p>
         </div>
-        <div style={cardStyle}>
+        <div className="card">
           <h3>⚠️ Unpaid Students</h3>
           <p>{summary.unpaid_students}</p>
         </div>
@@ -56,13 +56,12 @@ export default function Dashboard({ token }) {
   )
 }
 
-const cardStyle = {
-  border: '1px solid #ccc',
-  borderRadius: '10px',
-  padding: '1rem',
-  width: '200px',
-  textAlign: 'center',
-  // backgroundColor: '#f9f9f9',
-  backgroundColor: 'var(--card-bg)',
-  color: 'var(--text-color)',
-}
+// const cardStyle = {
+//   border: '1px solid #ccc',
+//   borderRadius: '10px',
+//   padding: '1rem',
+//   width: '200px',
+//   textAlign: 'center',
+//   backgroundColor: 'var(--card-bg)',
+//   color: 'var(--text-color)',
+// }
