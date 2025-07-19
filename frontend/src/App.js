@@ -12,6 +12,7 @@ import ProfilePage from './components/ProfilePage'
 import LandingPage from './components/LandingPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import './App.css'
 
 
@@ -40,6 +41,7 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('token')
     setToken(null)
+    toast.success('Logged out successfully')
     navigate('/');
   }
   
