@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.timezone import now
 import os
 
+
 class Student(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
@@ -31,12 +32,3 @@ def user_directory_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = f"{instance.user.username}_{now().strftime('%Y%m%d%H%M%S')}.{ext}"
     return os.path.join('profile_pics', filename)
-
-
-# class Profile(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     image = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
-
-#     def __str__(self):
-#         return self.user.username
-    

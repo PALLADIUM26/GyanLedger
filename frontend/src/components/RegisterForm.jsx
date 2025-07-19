@@ -27,7 +27,6 @@ export default function RegisterForm({ onLogin }) {
       await axios.post(REGISTER_API, formData)
       setSuccess(true)
 
-      // Auto-login after register
       const res = await axios.post(LOGIN_API, {
         username: formData.username,
         password: formData.password

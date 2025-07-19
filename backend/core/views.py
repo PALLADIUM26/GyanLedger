@@ -67,7 +67,6 @@ def dashboard_summary(request):
     total_payments = monthly_payments.count()
     total_amount = sum(p.amount for p in monthly_payments)
 
-    # Find students who have NOT paid this month
     paid_student_ids = monthly_payments.values_list('student_id', flat=True)
     unpaid_students = Student.objects.filter(user=user).exclude(id__in=paid_student_ids).count()
 
@@ -134,8 +133,6 @@ def monthly_summary(request):
 def user_profile(request):
     user = request.user
 
-    # profile, created = Profile.objects.get_or_create(user=user)
-
     if request.method == 'GET':
         return Response({
             'username': user.username,
@@ -143,8 +140,6 @@ def user_profile(request):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'image': request.build_absolute_uri('/api/profile-image/')
-            # 'image': request.build_absolute_uri(user.profile.image.url) if user.profile.image else None
-            # 'image': request.build_absolute_uri(user.profile.image.url)
         })
 
     elif request.method == 'PUT':
@@ -153,11 +148,6 @@ def user_profile(request):
         user.first_name = data.get('first_name', user.first_name)
         user.last_name = data.get('last_name', user.last_name)
         user.save()
-
-        # if 'image' in request.FILES:
-        #     file = request.FILES['image']
-        #     image_id = save_image(file, user.username)
-        #     return Response({'message': 'Profile updated successfully!', 'image_id': image_id})
 
         return Response({'message': 'Profile updated successfully!'})
     
@@ -175,18 +165,6 @@ def change_password(request):
     user.set_password(new_password)
     user.save()
     return Response({'message': '🔐 Password changed successfully'})
-
-
-# @api_view(['PUT'])
-# @parser_classes([MultiPartParser, FormParser])
-# @permission_classes([IsAuthenticated])
-# def update_profile_picture(request):
-#     profile = request.user.userprofile
-#     serializer = ProfileSerializer(profile, data=request.data, partial=True)
-#     if serializer.is_valid():
-#         serializer.save()
-#         return Response({'message': '✅ Profile picture updated!'})
-#     return Response(serializer.errors, status=400)
 
 
 @api_view(['PUT'])
@@ -213,7 +191,6 @@ def user_profile_image(request):
         mime_type, _ = guess_type(image_data.filename)
         image_data = image_data.read()
         return HttpResponse(image_data, content_type=mime_type or 'image/jpeg')
-        # return HttpResponse(image_data, content_type='image/jpeg')  # or 'image/png'
     return Response({'error': 'No profile picture found'}, status=404)
 
 

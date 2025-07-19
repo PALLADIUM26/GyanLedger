@@ -71,7 +71,7 @@ export default function PaymentList({ token }) {
   const handleEdit = (payment) => {
     setEditId(payment.id)
     setFormData({
-      student: payment.student, // this should be the student id
+      student: payment.student,
       amount: payment.amount,
       date: payment.date,
       remarks: payment.remarks
@@ -106,7 +106,6 @@ export default function PaymentList({ token }) {
         <input name="amount" type="number" placeholder="Amount" value={formData.amount} onChange={handleChange} required />
         <input name="date" type="date" value={formData.date} onChange={handleChange} required />
         <input name="remarks" placeholder="Remarks" value={formData.remarks} onChange={handleChange} />
-        {/* <button type="submit">Add Payment</button> */}
         <button type="submit">{editId ? 'Update Payment' : 'Add Payment'}</button>
 
         {editId && (

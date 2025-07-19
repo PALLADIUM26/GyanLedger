@@ -86,7 +86,7 @@
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: center;
-  align-items: stretch;  /* this is key for equal height */
+  align-items: stretch;
 }
 
 .card {
@@ -98,7 +98,6 @@
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 8px;
-  /* background: #f9f9f9; */
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
   min-height: 120px;
   text-align: center;

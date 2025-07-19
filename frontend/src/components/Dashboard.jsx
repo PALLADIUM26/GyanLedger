@@ -29,7 +29,6 @@ export default function Dashboard({ token }) {
   }, [token])
 
   if (!summary) return <div className="spinner"></div>
-  // <p>Loading dashboard...</p>
 
   return (
     <div>
@@ -56,12 +55,3 @@ export default function Dashboard({ token }) {
   )
 }
 
-// const cardStyle = {
-//   border: '1px solid #ccc',
-//   borderRadius: '10px',
-//   padding: '1rem',
-//   width: '200px',
-//   textAlign: 'center',
-//   backgroundColor: 'var(--card-bg)',
-//   color: 'var(--text-color)',
-// }

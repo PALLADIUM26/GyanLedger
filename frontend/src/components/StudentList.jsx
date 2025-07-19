@@ -96,7 +96,6 @@ export default function StudentList({ token }) {
     <div>
       <h2>📚 Student List</h2>
 
-      {/* 🔍 Search Input */}
       <input
         type="text"
         placeholder="🔍 Search by name or class"
