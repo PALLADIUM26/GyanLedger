@@ -103,13 +103,13 @@ export default function StudentList({ token }) {
   return (
     <div>
       <h2>📚 Student List</h2>
-
+      <div className='records'>
+    
       <input
         type="text"
         placeholder="🔍 Search by name or class"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: '1rem', padding: '0.5rem' }}
       />
 
       <form onSubmit={handleSubmit}>
@@ -144,7 +144,7 @@ export default function StudentList({ token }) {
         ) : (
           <p style={{ color: '#999', fontStyle: 'italic' }}>No students found.</p>
       )}
-
+    </div>
     </div>
   )
 }

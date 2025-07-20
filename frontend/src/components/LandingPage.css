@@ -1,18 +1,112 @@
+/* Wrapper to control page width and alignment */
+.landing-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  min-height: 100vh;
+  background-color: var(--bg-color, #f0f4ff);
+  color: var(--text-color, #1e1e1e);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Hero Section */
 .landing-container {
-    text-align: center;
-    padding: 4rem;
-    max-width: 600px;
-    margin: auto;
-  }
-  
-  .button-group {
-    margin-top: 2rem;
-  }
-  
-  .button-group button {
-    margin: 0 10px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-  }
-  
+  text-align: center;
+  max-width: 700px;
+}
+
+.landing-container h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #2a3f8d;
+}
+
+.landing-container p {
+  font-size: 1.2rem;
+  color: #444;
+  margin-bottom: 2rem;
+}
+
+/* CTA Buttons */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button-group button {
+  background-color: #2a3f8d;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-group button:hover {
+  background-color: #1c2a66;
+}
+
+/* Features Section */
+.features-section {
+  margin-top: 4rem;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.08);
+  max-width: 1000px;
+  width: 100%;
+}
+
+.features-section h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #2a3f8d;
+  text-align: center;
+}
+
+.features-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.feature-card {
+  flex: 1 1 250px;
+  padding: 1.5rem;
+  background: #f7faff;
+  border: 1px solid #dde8ff;
+  border-radius: 8px;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.feature-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  font-size: 1rem;
+  color: #333;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/* Footer */
+.landing-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #ccc;
+  font-size: 0.9rem;
+  color: #777;
+  text-align: center;
+}

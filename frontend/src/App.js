@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
 import StudentList from './components/StudentList.jsx'
@@ -30,6 +30,11 @@ function App() {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [showRegisterModal, setShowRegisterModal] = useState(false)
   const navigate = useNavigate();
+  // const location = useLocation();
+  // const isLanding = location.pathname === '/';
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'light';
+  });
 
   const handleLogin = (receivedToken) => {
     setToken(receivedToken)
@@ -44,23 +49,35 @@ function App() {
     toast.success('Logged out successfully')
     navigate('/');
   }
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(storedTheme);
+    document.body.classList.add(storedTheme);
+  }, []);
   
-  // useEffect(() => {
-  //   if (!token) {
-  //     navigate('/');
-  //   }
-  // }, [token, navigate]);
+  useEffect(() => {
+    document.body.classList.remove('light', 'dark');
+    document.body.classList.add(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
-  // useEffect(() => {
-  //   const theme = localStorage.getItem('theme') || 'light';
-  //   document.body.className = theme;
-  // }, []);
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'theme') {
+        setTheme(e.newValue);
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
-  // const toggleTheme = () => {
-  //   const current = document.body.className === 'dark' ? 'light' : 'dark';
-  //   document.body.className = current;
-  //   localStorage.setItem('theme', current);
-  // };
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(newTheme)
+    document.body.className = newTheme
+    localStorage.setItem('theme', newTheme)
+  }
 
   // return (
   //   <Router>
@@ -119,23 +136,29 @@ function App() {
   return (
     // <Router>
       <div className="App">
-        <h1>🎓 GyanLedger - Tuition Manager</h1>
-
         {/* 🧭 Navigation for logged in users */}
         {token && (
-          <nav>
-            <Link to="/home">🏠 Home</Link> |{' '}
-            <Link to="/dashboard">🛹 Dashboard</Link> |{' '}
-            <Link to="/students">👨‍🎓 Students</Link> |{' '}
-            <Link to="/payments">💸 Payments</Link> |{' '}
-            <Link to="/dues">🕒 Due Payments</Link> |{' '}
-            <Link to="/summary">📊 Summary</Link> |{' '}
-            <Link to="/profile">👤 Profile</Link> |{' '}
-            <button onClick={handleLogout}>Logout</button>
+          <nav className="navbar">
+            <h1 className="navbar-title">🎓 GyanLedger - Tuition Manager</h1>
+            <div className="nav-links">
+              <Link to="/home">🏠 Home</Link> |{' '}
+              <Link to="/dashboard">🛹 Dashboard</Link> |{' '}
+              <Link to="/students">👨‍🎓 Students</Link> |{' '}
+              <Link to="/payments">💸 Payments</Link> |{' '}
+              <Link to="/dues">🕒 Due Payments</Link> |{' '}
+              <Link to="/summary">📊 Summary</Link> |{' '}
+              <Link to="/profile">👤 Profile</Link> |{' '}
+              <button onClick={handleLogout}>Logout</button>
+            </div>
           </nav>
         )}
 
-        <ToastContainer position="top-right" autoClose={3000} />
+        <ToastContainer
+          position="top-right"
+          autoClose={1000}
+          closeOnClick
+          pauseOnHover
+        />
 
         {/* 🌐 Routes */}
         <Routes>
@@ -184,7 +207,8 @@ function App() {
               <Route path="/payments" element={<PaymentList token={token} />} />
               <Route path="/dues" element={<DueList token={token} />} />
               <Route path="/summary" element={<MonthlySummary token={token} />} />
-              <Route path="/profile" element={<ProfilePage token={token} setToken={setToken} />} />
+              {/* <Route path="/profile" element={<ProfilePage token={token} setToken={setToken} setTheme={setTheme} theme={theme} />} /> */}
+              <Route path="/profile" element={<ProfilePage token={token} setToken={setToken} setTheme={toggleTheme} theme={theme} />} />
             </>
           )}
         </Routes>

@@ -32,6 +32,7 @@ export default function DueList({ token }) {
   return (
     <div>
       <h2>⚠️ Due Payments</h2>
+      <div className='records'>
       {loading ? (
         <div className="spinner"></div>
         ) : dues.length === 0 ? (
@@ -46,6 +47,7 @@ export default function DueList({ token }) {
               ))}
             </ul>
       )}
+    </div>
     </div>
   )
 }

@@ -31,8 +31,9 @@ export default function MonthlySummary({ token }) {
   return (
     <div>
       <h2>📊 Monthly Report</h2>
+      <div className='records'>
       <input type="month" value={month} onChange={(e) => setMonth(e.target.value)} />
-      <button onClick={fetchSummary}>Fetch Report</button>
+      <button className='fetchBtn' onClick={fetchSummary}>Fetch Report</button>
 
       {summary && (
         <div>
@@ -42,6 +43,6 @@ export default function MonthlySummary({ token }) {
           <p><b>Pending:</b> ₹{summary.pending}</p>
         </div>
       )}
-    </div>
+    </div></div>
   )
 }

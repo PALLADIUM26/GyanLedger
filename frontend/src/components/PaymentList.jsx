@@ -96,10 +96,11 @@ export default function PaymentList({ token }) {
   return (
     <div>
       <h2>💰 Payment Records</h2>
+      <div className='records'>
 
       <input
         type="text"
-        placeholder="Search by student or remarks"
+        placeholder="🔍 Search by student or remarks"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
@@ -141,6 +142,7 @@ export default function PaymentList({ token }) {
         ) : (
           <p style={{ color: '#999', fontStyle: 'italic' }}>No payments found.</p>
       )}
+    </div>
     </div>
   )
 }

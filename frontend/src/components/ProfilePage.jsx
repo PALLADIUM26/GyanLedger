@@ -9,7 +9,7 @@ const IMAGE_API = 'http://localhost:8000/api/profile-image/'
 const IMAGE_UPLOAD_API = 'http://localhost:8000/api/profile-image/upload/'
 const DELETE_API = 'http://localhost:8000/api/delete-account/'
 
-export default function ProfilePage({ token, setToken  }) {
+export default function ProfilePage({ token, setToken, setTheme, theme  }) {
   const [profile, setProfile] = useState({
     username: '',
     email: '',
@@ -42,8 +42,6 @@ export default function ProfilePage({ token, setToken  }) {
     fetchProfile()
     fetchProfileImage()
     toast('Profile details loaded')
-    const savedTheme = localStorage.getItem('theme') || 'light'
-    document.body.classList.add(savedTheme)
   }, [])
 
   const fetchProfile = async () => {
@@ -71,33 +69,28 @@ export default function ProfilePage({ token, setToken  }) {
     }
   }
 
-  const handleImageChange = (e) => {
+  const handleQuickUpload = async (e) => {
     const file = e.target.files[0];
-    setSelectedImage(file);
-    setImagePreview(URL.createObjectURL(file));
-  };
-
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!selectedImage) {
+    if (!file) {
       toast.error('Select an image');
       return;
     }
-
+  
+    setSelectedImage(file);
+    setImagePreview(URL.createObjectURL(file));
+  
     const formData = new FormData();
-    formData.append('image', selectedImage);
-
+    formData.append('image', file);
+  
     try {
       await axios.put(IMAGE_UPLOAD_API, formData, config2);
-      toast.info('✅ Profile picture updated!')
-      // alert('✅ Profile picture updated!');
+      toast.info('✅ Profile picture updated!');
       fetchProfile();
     } catch (err) {
-      toast.error('❌ Upload failed')
-      // alert('❌ Upload failed');
-      // console.error(err);
+      toast.error('❌ Upload failed');
     }
   };
+  
 
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value })
@@ -144,57 +137,58 @@ export default function ProfilePage({ token, setToken  }) {
     }
   }
 
-  const toggleTheme = () => {
-    const body = document.body
-    if (body.classList.contains('dark')) {
-      body.classList.remove('dark')
-      body.classList.add('light')
-      localStorage.setItem('theme', 'light')
-      toast('Light theme enabled')
-    } else {
-      body.classList.remove('light')
-      body.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-      toast('Dark theme enabled')
-    }
-  }
-
   return (
-    <div>
+    <div className='profile_records'>
+      
       <h2>👤 Your Profile</h2>
-      <form onSubmit={handleSubmit}>
-        <input name="username" value={profile.username} disabled />
-        <input name="email" value={profile.email} onChange={handleChange} placeholder="Email" />
-        <input name="first_name" value={profile.first_name} onChange={handleChange} placeholder="First Name" />
-        <input name="last_name" value={profile.last_name} onChange={handleChange} placeholder="Last Name" />
-        <button type="submit">Update Profile</button>
+      <div className='sectiona'>
+      <div className='section1'>
         {imagePreview && <img src={imagePreview} alt="Profile" width={120} height={120} />}
-      </form>
-      {/* {message && <p>{message}</p>} */}
+        <button className='pic' type="button" onClick={() => document.getElementById('hiddenImageInput').click()}>✏️</button>
+      </div>
 
-      <form onSubmit={handleUpload}>
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        <button type="submit">Upload New Picture</button>
-      </form>
+      <div className='section2'>
+        <h3>🪪 Update Profile details</h3>
+        <form onSubmit={handleSubmit}>
+          <input name="username" value={profile.username} disabled />
+          <input name="email" value={profile.email} onChange={handleChange} placeholder="Email" />
+          <input name="first_name" value={profile.first_name} onChange={handleChange} placeholder="First Name" />
+          <input name="last_name" value={profile.last_name} onChange={handleChange} placeholder="Last Name" />
+          <button type="submit">Update Profile</button>
+          <button className='deleteBtn' onClick={handleDeleteAccount}>🗑️ Delete My Account</button>
+        </form>
+      </div>
 
-      <hr />
+      <input
+        id="hiddenImageInput"
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={handleQuickUpload}
+      />
 
-      <h3>🔐 Change Password</h3>
-      <form onSubmit={handlePasswordSubmit}>
-        <input type="password" name="old_password" placeholder="Old Password" value={passwordData.old_password} onChange={handlePasswordChange} required />
-        <input type="password" name="new_password" placeholder="New Password" value={passwordData.new_password} onChange={handlePasswordChange} required />
-        <button type="submit">Change Password</button>
-        {/* {passMsg && <p>{passMsg}</p>} */}
-      </form>
+      <div className='section3'>
+        <h3>🔐 Change Password</h3>
+        <form onSubmit={handlePasswordSubmit}>
+          <input type="password" name="old_password" placeholder="Old Password" value={passwordData.old_password} onChange={handlePasswordChange} required />
+          <input type="password" name="new_password" placeholder="New Password" value={passwordData.new_password} onChange={handlePasswordChange} required />
+          <button type="submit">Change Password</button>
+        </form>
+      </div>
+      </div>
 
-      <button onClick={() => toggleTheme()}>
-        🌓 Toggle Theme
-      </button>
-
-      <hr />
-      <button onClick={handleDeleteAccount} style={{ color: 'red' }}>
-      🗑️ Delete My Account
-      </button>
+      <div className='section4'>
+        <h3>🛞 Appearance</h3>
+        {/* <button className='toggleBtn' onClick={() => toggleTheme()}>
+          🌓 Toggle Theme
+        </button> */}
+        {/* <button className='toggleBtn' onClick={onToggleTheme}>
+          🌓 Toggle {currentTheme === 'light' ? 'Dark' : 'Light'} Mode
+        </button> */}
+        <button className='toggleBtn' onClick={setTheme}>
+          Toggle Theme ({theme === 'light' ? '🌞' : '🌙'})
+        </button>
+      </div>
     </div>
   )
 }

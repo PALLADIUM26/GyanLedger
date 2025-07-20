@@ -31,29 +31,29 @@ export default function Dashboard({ token }) {
     fetchSummary()
   }, [token])
 
-  if (!summary) return <div className="spinner"></div>
-
   return (
     <div>
       <h2>📊 Dashboard Summary</h2>
-      <div className="cards-container">
-        <div className="card">
-          <h3>👨‍🎓 Total Students</h3>
-          <p>{summary.total_students}</p>
+      {!summary ? ( <div className="spinner"></div> ) : (
+        <div className="cards-container">
+          <div className="card">
+            <h3>👨‍🎓 Total Students</h3>
+            <p>{summary.total_students}</p>
+          </div>
+          <div className="card">
+            <h3>💰 Payments This Month</h3>
+            <p>{summary.total_payments} transactions</p>
+          </div>
+          <div className="card">
+            <h3>🪙 Total Amount</h3>
+            <p>₹{summary.total_amount}</p>
+          </div>
+          <div className="card">
+            <h3>⚠️ Unpaid Students</h3>
+            <p>{summary.unpaid_students}</p>
+          </div>
         </div>
-        <div className="card">
-          <h3>💰 Payments This Month</h3>
-          <p>{summary.total_payments} transactions</p>
-        </div>
-        <div className="card">
-          <h3>🪙 Total Amount</h3>
-          <p>₹{summary.total_amount}</p>
-        </div>
-        <div className="card">
-          <h3>⚠️ Unpaid Students</h3>
-          <p>{summary.unpaid_students}</p>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
