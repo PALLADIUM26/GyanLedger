@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 .App-logo {
@@ -159,7 +159,7 @@ nav.navbar {
   background-color: #2a3f8d;
   padding: 0.75rem 1rem;
   margin-bottom: 1.5rem;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -458,11 +458,6 @@ form select {
   margin-bottom: 2rem;
 }
 
-/* .sectiona .section1 {
-  flex: 1 1 45%;
-  min-width: 280px;
-} */
-
 .sectiona .section1 {
   flex: 1 1 25%;
   min-width: 150px;
@@ -484,11 +479,14 @@ form select {
   background: transparent;
   font-size: 1.1rem;
   cursor: pointer;
-  /* position: absolute; */
   bottom: 0;
   right: 0;
   color: white;
   border-radius: 50%;
   width: 30px;
   height: 30px;
+}
+
+.profile_records {
+  padding: 1rem;
 }

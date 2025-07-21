@@ -6,7 +6,8 @@ export default function LandingPage({ onLoginClick, onRegisterClick }) {
     <div className="landing-wrapper">
       {/* Hero Section */}
       <header className="landing-container">
-        <h1>📘 GyanLedger</h1>
+        <img src="../logo.png" alt='' height='100'/>
+        <h1>GyanLedger</h1>
         <p>Manage your tuition center effortlessly - track students, collect fees, and view insights!</p>
         
         {/* CTA Buttons */}
@@ -37,7 +38,7 @@ export default function LandingPage({ onLoginClick, onRegisterClick }) {
 
       {/* Footer */}
       <footer className="landing-footer">
-        <p>&copy; {new Date().getFullYear()} GyanLedger. Made with ❤️ by Tech Comrades.</p>
+        <p>&copy; {new Date().getFullYear()} GyanLedger. Made with ⚔️ by Tech Comrades.</p>
       </footer>
       
     </div>

@@ -5,7 +5,7 @@
   align-items: center;
   padding: 2rem;
   min-height: 100vh;
-  background-color: var(--bg-color, #f0f4ff);
+  background-color: #f0f4ff;
   color: var(--text-color, #1e1e1e);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -14,6 +14,7 @@
 .landing-container {
   text-align: center;
   max-width: 700px;
+  /* margin-bottom: 1rem; */
 }
 
 .landing-container h1 {
@@ -53,8 +54,8 @@
 
 /* Features Section */
 .features-section {
-  margin-top: 4rem;
-  padding: 2rem;
+  margin-top: 2rem;
+  padding: 0rem;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0,0,0,0.08);
@@ -63,8 +64,9 @@
 }
 
 .features-section h2 {
+  margin-top: 1rem;
   font-size: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0rem;
   color: #2a3f8d;
   text-align: center;
 }
@@ -74,6 +76,7 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: center;
+  padding:2rem;
 }
 
 .feature-card {
