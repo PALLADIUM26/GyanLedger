@@ -51,13 +51,24 @@ export default function StudentList({ token }) {
     return email === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
 
+  const validatePhone = (phone) => {
+    return phone === '' || /^\d{10}$/.test(phone)
+  }  
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    if (!validatePhone(formData.phone)) {
+      toast.error('Please enter a valid 10-digit phone number.')
+      return
+    }
+
     if (!validateEmail(formData.email)) {
       toast.error('Please enter a valid email address.')
       // alert('Please enter a valid email address.')
       return
     }
+
     try{
       if (editId) {
         await axios.put(`${STUDENTS_API}${editId}/`, formData, config)
@@ -114,8 +125,8 @@ export default function StudentList({ token }) {
 
       <form onSubmit={handleSubmit}>
         <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
-        <input name="student_class" placeholder="Class" value={formData.student_class} onChange={handleChange} required />
-        <input name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
+        <input name="student_class" placeholder="Class" type="number" value={formData.student_class} onChange={handleChange} required />
+        <input name="phone" placeholder="Phone" type="number" value={formData.phone} onChange={handleChange} />
         <input name="email" type="email" placeholder="Email" value={formData.email} onChange={handleChange} />
         <input name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
         <input name="monthly_fee" placeholder="Monthly Fee" type="number" value={formData.monthly_fee} onChange={handleChange} required />
