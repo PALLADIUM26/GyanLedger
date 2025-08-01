@@ -6,7 +6,7 @@
   padding: 2rem;
   min-height: 100vh;
   background-color: #f0f4ff;
-  color: var(--text-color, #1e1e1e);
+  color: #1e1e1e;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
