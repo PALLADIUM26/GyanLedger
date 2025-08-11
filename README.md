@@ -174,8 +174,8 @@ GyanLedger/
 5. Customize your profile and theme
 
 ---
-
-## 📷 Screenshots
+<!--
+## 🖼 Screenshots
 
 <details>
   <summary>🔓 Landing Page</summary>
@@ -191,11 +191,10 @@ GyanLedger/
   <summary>👤 Profile Page</summary>
   (insert image here)
 </details>
+-->
+## 📹 Demo
 
-## 🖼 Demo
-
-> *Include 2–3 screenshots of the dashboard, profile page, and landing page here if possible.*
-
+**▶ [Watch Demo Video](https://drive.google.com/file/d/1MQstH4FCeU2SuE9HNruU_yvupQBaj_wb/preview)**
 
 ---
 
