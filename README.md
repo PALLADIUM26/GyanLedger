@@ -92,7 +92,7 @@ cd GyanLedger
 ```bash
 cd backend
 python -m venv venv
-venv\Scripts\activate.
+venv\Scripts\activate
 ```
 
 3. Install dependencies:
@@ -192,7 +192,7 @@ GyanLedger/
   (insert image here)
 </details>
 
-## 🖼 Demos
+## 🖼 Demo
 
 > *Include 2–3 screenshots of the dashboard, profile page, and landing page here if possible.*
 
